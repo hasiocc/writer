@@ -8,8 +8,8 @@ Plugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  plugins: 'code writer fullscreen wordcount ',
-  toolbar: 'writer ',
+  plugins: 'code writer writing fullscreen wordcount ',
+  toolbar: 'writer|writing',
   language: 'zh-Hant',
   branding: false,
   promotion: false,
