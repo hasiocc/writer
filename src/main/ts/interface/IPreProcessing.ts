@@ -2,7 +2,7 @@ import { ISettings } from './ISettings';
 
 interface IPreProcessing {
   mode: string;
-  content:string;
+  content:string[];
   settings:ISettings
 }
 
