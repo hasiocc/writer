@@ -4,6 +4,7 @@ import * as PreProcessing from '../api/WritingPreProcessing';
 const writing = (editor: Editor): void => {
   const parameters = PreProcessing.preProcessing(editor);
   console.log(parameters);
+  //還要判斷是否允許模式
   //假設取得的內容是空字串，則就彈出視窗告知
   /*
   if(tempContent === "") {

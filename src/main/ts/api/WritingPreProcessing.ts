@@ -2,13 +2,104 @@ import { Editor } from 'tinymce';
 import * as Settings from '../api/Setting';
 import { ISettings } from '../interface/ISettings';
 import { IPreProcessing } from '../interface/IPreProcessing';
+import { encode } from '../lib/counter/Encoder';
 
 
-const formatContentByAppendMode = (content: string[], settings: ISettings, isLineBreak: boolean): string[] => {
+/**
+ * 新增模式的提示文處理
+ * @param content
+ * @param settings
+ * @returns
+ */
+const formatContentByAppendMode = (content: string[], settings: ISettings): string[] => {
+  const lastPrompt = [];
+  content.every(function (value) {
+    if (encode(lastPrompt.join("") + value).length <= Number(settings.modelSettings.maxPromptLength)) {
+      lastPrompt.unshift(value);
+      return true;
+    } else {
+      return false;
+    }
+  });
+  return lastPrompt;
+}
 
-  console.log(content);
+/**
+ * Insert模式的提示文處理
+ * @param content
+ * @param settings
+ * @returns
+ */
+const formatContentByInsertMode = (content: string[], settings: ISettings): string[] => {
 
-  return content;
+  //段落總長度
+  const totalLength = content.length - 1;
+
+  //取得insert標記在提示中的位置
+  let indexPosition = -1;
+  content.every(function (value) {
+    indexPosition += 1;
+    if (value.indexOf("[insert]") !== -1) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+
+  const status = true;
+  let InsertAreaTokensTotal = encode(content[indexPosition]).length;
+  let lastIndex = 0;
+  let firstIndex = 0;
+  let step = 1;
+
+  let maxPromptLength = 0;
+  if (settings.InsertModel.allowUseModelSettings === false) {
+    maxPromptLength = Number(settings.InsertModel.bestPromptCount);
+  } else {
+    maxPromptLength = Number(settings.modelSettings.maxPromptLength);
+  }
+
+  while (status) {
+    let isEnd = false;
+    let isHead = false;
+    //向後算
+    if ((indexPosition + step) <= totalLength) {
+      const rightPromptTokens = encode(content[indexPosition + step]).length;
+      if ((InsertAreaTokensTotal + rightPromptTokens) > maxPromptLength) {
+        break;
+      }
+      InsertAreaTokensTotal += rightPromptTokens;
+      lastIndex = (indexPosition + step);
+    } else {
+      lastIndex = totalLength;
+      isEnd = true;
+    }
+
+    //向前算
+    if ((indexPosition - step) >= 0) {
+
+      const leftPromptTokens = encode(content[indexPosition - step]).length;
+      if ((InsertAreaTokensTotal + leftPromptTokens) > maxPromptLength) {
+        break;
+      }
+      InsertAreaTokensTotal += leftPromptTokens;
+      firstIndex = (indexPosition - step);
+    } else {
+      isHead = true;
+      firstIndex = 0;
+    }
+
+    if (isEnd === true && isHead == true) {
+      break;
+    }
+
+    step += 1;
+
+  }
+
+  const slicePrompt = content.slice(firstIndex, lastIndex + 1);
+  console.log(slicePrompt.reverse());
+  return [];
 }
 
 const formatContent = (mode: string, content: string, settings: ISettings): IPreProcessing => {
@@ -30,7 +121,7 @@ const formatContent = (mode: string, content: string, settings: ISettings): IPre
   let countPrompt = 0;
   splitContent.forEach(function (value) {
     countPrompt += 1;
-    if (settings.modelSettings.allowBestPrompt === true && countPrompt == Number(settings.modelSettings.bestPromptCount) && settings.globalSettings.defaultModel === 'text-davinci-003') {
+    if (Settings.checkUseBestPrompt(mode) === true && countPrompt === Settings.getBestPromptCount(mode)) {
       prompt.unshift(value + "\n" + "##" + "\n");
       countPrompt = 0;
     } else {
@@ -42,16 +133,19 @@ const formatContent = (mode: string, content: string, settings: ISettings): IPre
   if (isLineBreak === false) {
     prompt[0] = prompt[0].replace("\n", "").replace("##\n", "");
   } else {
-    if (prompt[0].endsWith("##\n") === false && settings.modelSettings.allowBestPrompt === true && settings.globalSettings.defaultModel === 'text-davinci-003') {
+    if (prompt[0].endsWith("##\n") === false && Settings.checkUseBestPrompt(mode) === true) {
       prompt[0] = prompt[0] + "##\n";
     }
   }
 
   //根據不同模式進行文本塊的處理
   switch (mode) {
-    case "append": {
-      preProcessing.content = formatContentByAppendMode(prompt, settings, isLineBreak);
-    }
+    case "append":
+      preProcessing.content = formatContentByAppendMode(prompt, settings);
+      break;
+    case "insert":
+      preProcessing.content = formatContentByInsertMode(prompt, settings);
+      break;
   }
 
   return preProcessing;

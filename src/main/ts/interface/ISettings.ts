@@ -56,5 +56,6 @@ export {
   Igpt35turboSettings,
   IModelSettings,
   IEditModel,
-  ISettings
+  ISettings,
+  IInsertModel
 }

@@ -64,13 +64,53 @@ function saveSetting(setting: Settings.ISettings): void {
   LocalStorage.save(JSON.stringify(setting));
 }
 
-function removeAll():void {
+function removeAll(): void {
   LocalStorage.removeAll();
+}
+
+function getBestPromptCount(mode: string): number {
+  let output = 1;
+  if (checkUseBestPrompt(mode) === true) {
+    const setting = get();
+    switch (mode) {
+      case "append":
+        output = Number(setting.modelSettings.bestPromptCount);
+        break;
+      case "insert":
+        if (setting.InsertModel.allowUseModelSettings === false) {
+          output = Number(setting.InsertModel.bestPromptCount);
+        } else {
+          output = Number(setting.modelSettings.bestPromptCount);
+        }
+    }
+  }
+  return output;
+}
+
+function checkUseBestPrompt(mode: string): boolean {
+  let status = false;
+  const setting = get();
+  switch (mode) {
+    case "append":
+      status = (setting.globalSettings.defaultModel === 'text-davinci-003' && setting.modelSettings.allowBestPrompt === true);
+      break;
+    case "insert":
+      if (setting.InsertModel.allowUseModelSettings === false) {
+        status = setting.InsertModel.allowBestPrompt;
+      } else {
+        status = setting.modelSettings.allowBestPrompt;
+      }
+      break;
+    //edit模式不用處理
+  }
+  return status;
 }
 
 export {
   get,
   getDefaultSettings,
   saveSetting,
-  removeAll
+  removeAll,
+  checkUseBestPrompt,
+  getBestPromptCount
 }
