@@ -66,12 +66,12 @@ const open = (editor: Editor): void => {
       tabs: [
         {
           name: 'globalSettings',
-          title: '一般設定',
+          title: editor.translate('一般設定'),
           items: [
             {
               type: 'selectbox',
               name: 'defaultModel',
-              label: '內容產生時預設使用模型',
+              label: editor.translate('內容產生時預設使用模型'),
               size: 1,
               items: [
                 { value: 'text-davinci-003', text: 'text-davinci-003' },
@@ -85,32 +85,21 @@ const open = (editor: Editor): void => {
             {
               type: 'checkbox',
               name: 'allowHighlight',
-              label: '針對產生的內容進行背景高亮區別',
+              label: editor.translate('針對產生的內容進行背景高亮區別'),
             },
             {
               type: 'colorinput',
               name: 'textBackgroundColor',
-              label: '高亮顏色選擇',
+              label: editor.translate('高亮顏色選擇'),
             },
             {
               type: 'htmlpanel',
               html: '<div style="color:blue; font-size: 12px">' + editor.translate("高亮顏色選擇說明描述") + '</div>'
             },
             {
-              type: 'selectbox',
-              name: 'textCnToTw',
-              label: '內容生成強制轉成(繁體/簡體/不強制設定)',
-              size: 1,
-              items: [
-                { value: 'tw', text: '繁體' },
-                { value: 'cn', text: '簡體' },
-                { value: 'not_mandatory', text: '不強制' }
-              ]
-            },
-            {
               type: 'textarea',
               name: 'defaultPrompt',
-              label: '預設提示詞',
+              label: editor.translate('預設提示詞'),
               placeholder: '',
               maximized: false
             },
@@ -121,7 +110,7 @@ const open = (editor: Editor): void => {
             {
               type: 'checkbox',
               name: 'allowCloseAuditTips',
-              label: '關閉審核提示'
+              label: editor.translate('關閉審核提示')
             },
             {
               type: 'htmlpanel',
@@ -131,13 +120,13 @@ const open = (editor: Editor): void => {
         },
         {
           name: 'modelSettings',
-          title: '模型設定',
+          title: editor.translate('模型設定'),
           items: [
             {
               type: 'input',
               name: 'temperature',
-              label: '溫度',
-              placeholder: '允許類型:數字(0~1)',
+              label: editor.translate('溫度'),
+              placeholder: editor.translate('允許類型:數字(0~2)'),
             },
             {
               type: 'htmlpanel',
@@ -146,8 +135,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'maximumLength',
-              label: '文字內容最大生成長度',
-              placeholder: '允許類型:數字(1~4000)'
+              label:  editor.translate('文字內容最大生成長度'),
+              placeholder: editor.translate('允許類型:數字(1~4000)')
             },
             {
               type: 'htmlpanel',
@@ -156,8 +145,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'maxPromptLength',
-              label: '最大提示長度',
-              placeholder: '允許類型:數字(1~4000)'
+              label: editor.translate('最大提示長度'),
+              placeholder: editor.translate('允許類型:數字(1~4000)')
             },
             {
               type: 'htmlpanel',
@@ -166,8 +155,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'stopSequences',
-              label: '停用詞',
-              placeholder: '以半形空格區分，例如:\\n stop \'\'\'',
+              label: editor.translate('停用詞'),
+              placeholder: editor.translate('以半形空格區分，例如:\\n stop \'\'\''),
             },
             {
               type: 'htmlpanel',
@@ -177,7 +166,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'Top_P',
               label: 'Top P',
-              placeholder: '允許類型:數字'
+              placeholder: editor.translate('允許類型:數字')
             },
             {
               type: 'htmlpanel',
@@ -186,8 +175,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'frequencyPenalty',
-              label: '頻率懲罰',
-              placeholder: '允許類型:數字(0~2)'
+              label: editor.translate('頻率懲罰'),
+              placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
               type: 'htmlpanel',
@@ -196,8 +185,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'presencePenalty',
-              label: '存在懲罰',
-              placeholder: '允許類型:數字(0~2)'
+              label: editor.translate('存在懲罰'),
+              placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
               type: 'htmlpanel',
@@ -206,12 +195,12 @@ const open = (editor: Editor): void => {
             {
               type: 'checkbox',
               name: 'allowBestPrompt',
-              label: '啟用最佳化上下文提示',
+              label: editor.translate('啟用最佳化上下文提示'),
             },
             {
               type: 'input',
               name: 'bestPromptCount',
-              label: '提示最佳化區塊數量',
+              label: editor.translate('提示最佳化區塊數量'),
 
             },
             {
@@ -226,12 +215,12 @@ const open = (editor: Editor): void => {
         }
         , {
           name: 'insertModelSettings',
-          title: 'Insert模式設定',
+          title: editor.translate('Insert模式設定'),
           items: [
             {
               type: 'checkbox',
               name: 'allowInsertMode',
-              label: '是否啟用Insert模式',
+              label: editor.translate('是否啟用Insert模式'),
             },
             {
               type: 'htmlpanel',
@@ -240,7 +229,7 @@ const open = (editor: Editor): void => {
             {
               type: 'checkbox',
               name: 'allowUseModelSettings',
-              label: '直接使用模式設定的參數',
+              label: editor.translate('直接使用模型設定的參數'),
             },
             {
               type: 'htmlpanel',
@@ -249,8 +238,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'insert_mode_temperature',
-              label: '溫度',
-              placeholder: '允許類型:數字(0~2)',
+              label: editor.translate('溫度'),
+              placeholder: editor.translate('允許類型:數字(0~2)'),
             },
             {
               type: 'htmlpanel',
@@ -259,8 +248,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'insert_mode_maximumLength',
-              label: '文字內容最大生成長度',
-              placeholder: '允許類型:數字(1~4000)'
+              label: editor.translate('文字內容最大生成長度'),
+              placeholder: editor.translate('允許類型:數字(1~4000)')
             },
             {
               type: 'htmlpanel',
@@ -269,8 +258,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'insert_mode_maxPromptLength',
-              label: '最大提示長度',
-              placeholder: '允許類型:數字(1~4000)'
+              label: editor.translate('最大提示長度'),
+              placeholder: editor.translate('允許類型:數字(1~4000)')
             },
             {
               type: 'htmlpanel',
@@ -279,8 +268,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'insert_mode_stopSequences',
-              label: '停用詞',
-              placeholder: '以半形空格區分，例如:\\n stop \'\'\'',
+              label: editor.translate('停用詞'),
+              placeholder: editor.translate('以半形空格區分，例如:\\n stop \'\'\''),
             },
             {
               type: 'htmlpanel',
@@ -290,7 +279,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'insert_mode_Top_P',
               label: 'Top P',
-              placeholder: '允許類型:數字'
+              placeholder: editor.translate('允許類型:數字')
             },
             {
               type: 'htmlpanel',
@@ -299,8 +288,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'insert_mode_frequencyPenalty',
-              label: '頻率懲罰',
-              placeholder: '允許類型:數字(0~2)'
+              label: editor.translate('頻率懲罰'),
+              placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
               type: 'htmlpanel',
@@ -309,8 +298,8 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'insert_mode_presencePenalty',
-              label: '存在懲罰',
-              placeholder: '允許類型:數字(0~2)'
+              label: editor.translate('存在懲罰'),
+              placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
               type: 'htmlpanel',
@@ -319,12 +308,12 @@ const open = (editor: Editor): void => {
             {
               type: 'checkbox',
               name: 'insert_mode_allowBestPrompt',
-              label: '啟用最佳化上下文提示',
+              label: editor.translate('啟用最佳化上下文提示'),
             },
             {
               type: 'input',
               name: 'insert_mode_bestPromptCount',
-              label: '提示最佳化區塊數量',
+              label: editor.translate('提示最佳化區塊數量'),
 
             },
             {
@@ -335,12 +324,12 @@ const open = (editor: Editor): void => {
 
         }, {
           name: 'editModelSettings',
-          title: 'Edit模式設定',
+          title: editor.translate('Edit模式設定'),
           items: [
             {
               type: 'checkbox',
               name: 'allowEditMode',
-              label: '是否啟用Edit模式',
+              label: editor.translate('是否啟用Edit模式'),
             },
             {
               type: 'htmlpanel',
@@ -349,17 +338,17 @@ const open = (editor: Editor): void => {
             {
               type: 'checkbox',
               name: 'allowEditUseModelSettings',
-              label: '直接使用模式設定的參數',
+              label: editor.translate('直接使用模式設定的參數'),
             },
             {
               type: 'htmlpanel',
-              html: '<div style="color:blue; font-size: 12px">' + editor.translate('直接使用模式設定的參數說明描述') + '</div>'
+              html: '<div style="color:blue; font-size: 12px">' + editor.translate('模式直接使用模式設定的參數說明描述') + '</div>'
             },
             {
               type: 'input',
               name: 'edit_mode_temperature',
-              label: '溫度',
-              placeholder: '允許類型:數字(0~2)',
+              label: editor.translate('溫度'),
+              placeholder: editor.translate('允許類型:數字(0~2)'),
             },
             {
               type: 'htmlpanel',
@@ -369,7 +358,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'edit_mode_Top_P',
               label: 'Top P',
-              placeholder: '允許類型:數字'
+              placeholder: editor.translate('允許類型:數字')
             },
             {
               type: 'htmlpanel',

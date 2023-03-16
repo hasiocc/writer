@@ -105,11 +105,9 @@ function bpe(token) {
   while (state) {
     const minPairs = {}
     Array.from(pairs).map(pair => {
-      const rank = bpe_ranks[pair]
+      const rank = bpe_ranks[pair as string]
       minPairs[(isNaN(rank) ? 10e10 : rank)] = pair
     })
-
-
 
     const bigram = minPairs[Math.min(...Object.keys(minPairs).map(x => {
       return parseInt(x)

@@ -87,11 +87,11 @@ class SettingEntity {
       if ((parseInt(data.maximumLength) + parseInt(data.maxPromptLength)) > 4000) {
         throw new RangeError("模型設定-文字內容最大生成長度+最大提示長度不得超過4000");
       }
-      if (Number(data.frequencyPenalty.trim()) < 0 || Number(data.frequencyPenalty.trim()) > 2) {
-        throw new RangeError("模型設定-頻率懲罰必須介於0~2的範圍");
+      if (Number(data.frequencyPenalty.trim()) < -2 || Number(data.frequencyPenalty.trim()) > 2) {
+        throw new RangeError("模型設定-頻率懲罰必須介於-2~2的範圍");
       }
-      if (Number(data.presencePenalty.trim()) < 0 || Number(data.presencePenalty.trim()) > 2) {
-        throw new RangeError("模型設定-存在懲罰必須介於0~2的範圍");
+      if (Number(data.presencePenalty.trim()) < -2 || Number(data.presencePenalty.trim()) > 2) {
+        throw new RangeError("模型設定-存在懲罰必須介於-2~2的範圍");
       }
       if (Number(data.bestPromptCount.trim()) < 1 && data.allowBestPrompt === true) {
         throw new RangeError("模型設定-提示最佳化區塊數量必須大於0");
@@ -135,11 +135,11 @@ class SettingEntity {
         if ((parseInt(data.insert_mode_maximumLength) + parseInt(data.insert_mode_maxPromptLength)) > 4000) {
           throw new RangeError("Insert模式-文字內容最大生成長度+最大提示長度不得超過4000");
         }
-        if (Number(data.insert_mode_frequencyPenalty.trim()) < 0 || Number(data.insert_mode_frequencyPenalty.trim()) > 2) {
-          throw new RangeError("Insert模式-頻率懲罰必須介於0~2的範圍");
+        if (Number(data.insert_mode_frequencyPenalty.trim()) < -2 || Number(data.insert_mode_frequencyPenalty.trim()) > 2) {
+          throw new RangeError("Insert模式-頻率懲罰必須介於-2~2的範圍");
         }
-        if (Number(data.insert_mode_presencePenalty.trim()) < 0 || Number(data.insert_mode_presencePenalty.trim()) > 2) {
-          throw new RangeError("Insert模式-存在懲罰必須介於0~2的範圍");
+        if (Number(data.insert_mode_presencePenalty.trim()) < -2 || Number(data.insert_mode_presencePenalty.trim()) > 2) {
+          throw new RangeError("Insert模式-存在懲罰必須介於-2~2的範圍");
         }
         if (Number(data.insert_mode_bestPromptCount.trim()) < 1 && data.insert_mode_allowBestPrompt === true) {
           throw new RangeError("Insert模式-提示最佳化區塊數量必須大於0");
