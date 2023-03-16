@@ -389,15 +389,15 @@ const open = (editor: Editor): void => {
     buttons: [
       {
         type: 'custom',
-        text: '恢復預設值'
+        text: editor.translate('恢復預設值')
       },
       {
         type: 'cancel',
-        text: '取消'
+        text: editor.translate('取消')
       },
       {
         type: 'submit',
-        text: '保存',
+        text: editor.translate('保存'),
         buttonType: 'primary'
       }
     ],
