@@ -155,6 +155,7 @@ function bpe(token) {
   return word
 }
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function encode(text) {
   let bpe_tokens = []
   const matches = Array.from(text.matchAll(pat)).map(x => x[0])

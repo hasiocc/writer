@@ -25,12 +25,13 @@ const formatContentByAppendMode = (content: string[], settings: ISettings): stri
 }
 
 /**
- * Insert模式的提示文處理
+ * Insert或Edit模式的提示文處理
+ * @param mode
  * @param content
  * @param settings
  * @returns
  */
-const formatContentByInsertMode = (content: string[], settings: ISettings): string[] => {
+const formatContentByInsertOrEditMode = (mode: string, content: string[], settings: ISettings): string[] => {
 
   //段落總長度
   const totalLength = content.length - 1;
@@ -45,6 +46,11 @@ const formatContentByInsertMode = (content: string[], settings: ISettings): stri
       return true;
     }
   });
+
+  //edit模式就把[insert]拿掉
+  if (mode === "edit") {
+    content[indexPosition] = content[indexPosition].replace("[insert]", "");
+  }
 
   const status = true;
   let InsertAreaTokensTotal = encode(content[indexPosition]).length;
@@ -98,9 +104,10 @@ const formatContentByInsertMode = (content: string[], settings: ISettings): stri
   }
 
   const slicePrompt = content.slice(firstIndex, lastIndex + 1);
-  console.log(slicePrompt.reverse());
-  return [];
+  return slicePrompt.reverse();
 }
+
+
 
 const formatContent = (mode: string, content: string, settings: ISettings): IPreProcessing => {
 
@@ -144,15 +151,17 @@ const formatContent = (mode: string, content: string, settings: ISettings): IPre
       preProcessing.content = formatContentByAppendMode(prompt, settings);
       break;
     case "insert":
-      preProcessing.content = formatContentByInsertMode(prompt, settings);
+      preProcessing.content = formatContentByInsertOrEditMode(mode, prompt, settings);
+      break;
+    case "edit":
+      preProcessing.content = formatContentByInsertOrEditMode(mode, prompt, settings);
       break;
   }
 
   return preProcessing;
 }
 
-const preProcessing = (editor: Editor): IPreProcessing => {
-  const settings: ISettings = Settings.get();
+const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
   const tempContent = editor.getContent();
   const selectedContent = editor.selection.getContent({ format: 'text' });
   let content = "";
@@ -176,18 +185,11 @@ const preProcessing = (editor: Editor): IPreProcessing => {
   //判斷要以什麼模式做API請求
   let mode = "append";
   if (selectedContent.trim().length > 0) {
-
     mode = "edit";
-    content = content.replace("[insert]", "");
-
   } else if (content.endsWith("[insert]")) {
-
     content = content.slice(0, content.length - "[insert]".length);
-
   } else {
-
     mode = "insert";
-
   }
 
   return formatContent(mode, content, settings);

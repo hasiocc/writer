@@ -233,7 +233,7 @@ const open = (editor: Editor): void => {
             },
             {
               type: 'htmlpanel',
-              html: '<div style="color:blue; font-size: 12px">' + editor.translate('直接使用模式設定的參數說明描述') + '</div>'
+              html: '<div style="color:blue; font-size: 12px">' + editor.translate('直接使用模型設定的參數說明描述') + '</div>'
             },
             {
               type: 'input',
@@ -342,7 +342,7 @@ const open = (editor: Editor): void => {
             },
             {
               type: 'htmlpanel',
-              html: '<div style="color:blue; font-size: 12px">' + editor.translate('模式直接使用模式設定的參數說明描述') + '</div>'
+              html: '<div style="color:blue; font-size: 12px">' + editor.translate('直接使用模型設定的參數說明描述') + '</div>'
             },
             {
               type: 'input',
