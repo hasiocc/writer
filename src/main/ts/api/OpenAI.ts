@@ -4,11 +4,11 @@ import { Editor } from 'tinymce';
 //審核
 const moderationUrl = "https://api.openai.com/v1/moderations";
 //編輯
-const editUrl = "https://api.openai.com/v1/edits";
+//const editUrl = "https://api.openai.com/v1/edits";
 //完成
-const completionsUrl = "https://api.openai.com/v1/completions";
+//const completionsUrl = "https://api.openai.com/v1/completions";
 //Chat
-const chatUrl = "https://api.openai.com/v1/chat/completions";
+//const chatUrl = "https://api.openai.com/v1/chat/completions";
 
 interface IRequestOptions {
   mode: string
