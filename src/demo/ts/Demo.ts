@@ -9,7 +9,7 @@ Plugin();
 tinymce.init({
   selector: 'textarea.tinymce',
   plugins: 'code writer writing fullscreen wordcount preview importcss searchreplace autolink directionality visualblocks visualchars image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons',
-  toolbar: 'writer| writing |undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | preview save print | insertfile image media template link anchor codesample | ltr rtl',
+  toolbar: 'writer| writing|print|save|undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons  | insertfile image media template link anchor codesample | ltr rtl',
   language: 'zh-Hant',
   branding: false,
   promotion: false,
@@ -23,5 +23,7 @@ tinymce.init({
 
   init_instance_callback:function(editor) {
     document.querySelector('button.tox-statusbar__wordcount').click();
+    editor.selection.select(editor.getBody(), true); // ed is the editor instance
+    editor.selection.collapse(false);
   }
 });

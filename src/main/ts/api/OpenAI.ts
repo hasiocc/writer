@@ -72,7 +72,6 @@ interface IOpenAIError {
 
 function formatModerationInfo(response: string): IModerationResponse {
   const object = JSON.parse(response);
-  console.log(object);
   const output: IModerationResponse = {
     id: object.id,
     model: object.model,
@@ -140,6 +139,8 @@ function moderation(options: IRequestOptions) {
             } else {
               options.requestErrorCallback(options.editor, options.mode, error);
             }
+          } else {
+            resolve(response);
           }
         }
         catch (err) {
