@@ -22,7 +22,7 @@ tinymce.init({
   },
 
   init_instance_callback:function(editor) {
-    document.querySelector('button.tox-statusbar__wordcount').click();
+    //document.querySelector('button.tox-statusbar__wordcount').click();
     editor.selection.select(editor.getBody(), true); // ed is the editor instance
     editor.selection.collapse(false);
   }
