@@ -125,6 +125,7 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'temperature',
+              inputMode: 'decimal',
               label: editor.translate('溫度'),
               placeholder: editor.translate('允許類型:數字(0~2)'),
             },
@@ -135,6 +136,7 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'maximumLength',
+              inputMode: 'numeric',
               label:  editor.translate('文字內容最大生成長度'),
               placeholder: editor.translate('允許類型:數字(1~4000)')
             },
@@ -146,6 +148,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'maxPromptLength',
               label: editor.translate('最大提示長度'),
+              inputMode: 'numeric',
               placeholder: editor.translate('允許類型:數字(1~4000)')
             },
             {
@@ -166,6 +169,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'Top_P',
               label: 'Top P',
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字')
             },
             {
@@ -176,6 +180,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'frequencyPenalty',
               label: editor.translate('頻率懲罰'),
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
@@ -186,6 +191,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'presencePenalty',
               label: editor.translate('存在懲罰'),
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
@@ -200,6 +206,7 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'bestPromptCount',
+              inputMode: 'numeric',
               label: editor.translate('提示最佳化區塊數量'),
 
             },
@@ -239,6 +246,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'insert_mode_temperature',
               label: editor.translate('溫度'),
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字(0~2)'),
             },
             {
@@ -249,6 +257,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'insert_mode_maximumLength',
               label: editor.translate('文字內容最大生成長度'),
+              inputMode: 'numeric',
               placeholder: editor.translate('允許類型:數字(1~4000)')
             },
             {
@@ -259,6 +268,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'insert_mode_maxPromptLength',
               label: editor.translate('最大提示長度'),
+              inputMode: 'numeric',
               placeholder: editor.translate('允許類型:數字(1~4000)')
             },
             {
@@ -279,6 +289,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'insert_mode_Top_P',
               label: 'Top P',
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字')
             },
             {
@@ -289,6 +300,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'insert_mode_frequencyPenalty',
               label: editor.translate('頻率懲罰'),
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
@@ -299,6 +311,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'insert_mode_presencePenalty',
               label: editor.translate('存在懲罰'),
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字(-2~2)')
             },
             {
@@ -313,6 +326,7 @@ const open = (editor: Editor): void => {
             {
               type: 'input',
               name: 'insert_mode_bestPromptCount',
+              inputMode: 'numeric',
               label: editor.translate('提示最佳化區塊數量'),
 
             },
@@ -348,6 +362,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'edit_mode_temperature',
               label: editor.translate('溫度'),
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字(0~2)'),
             },
             {
@@ -358,6 +373,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'edit_mode_Top_P',
               label: 'Top P',
+              inputMode: 'decimal',
               placeholder: editor.translate('允許類型:數字')
             },
             {
