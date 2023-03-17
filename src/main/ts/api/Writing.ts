@@ -3,6 +3,9 @@ import * as PreProcessing from '../api/WritingPreProcessing';
 import * as Settings from '../api/Setting';
 import { ISettings } from '../interface/ISettings';
 import * as editPanel from '../ui/writing/EditDialog';
+import * as setApiKeyPanel from '../ui/writing/setApiKeyDialog';
+
+let apiKey = '';
 
 const editPanelCallBack = (content:string[],prompt:string,settings:ISettings):void => {
   console.log(content);
@@ -10,12 +13,31 @@ const editPanelCallBack = (content:string[],prompt:string,settings:ISettings):vo
   console.log(settings);
 }
 
+const setApiKeyCallBack = (editor: Editor,api_key:string):void => {
+  apiKey = api_key.trim();
+  if(api_key === "") {
+    editor.notificationManager.open({
+      text: editor.translate("尚未填入API Key"),
+      type: "error",
+      timeout: 3000
+    });
+  } else {
+    apiKey = api_key.trim();
+    writing(editor);
+  }
+}
+
 const writing = (editor: Editor): void => {
   const settings: ISettings = Settings.get();
   const parameters = PreProcessing.preProcessing(editor,settings);
 
   console.log(parameters);
-  if(parameters.mode === 'edit' && parameters.content.length > 0) {
+
+  if(apiKey.trim() === "") {
+
+    setApiKeyPanel.open(editor,setApiKeyCallBack);
+
+  } else if(parameters.mode === 'edit' && parameters.content.length > 0) {
 
     if(settings.EditModel.allowEditMode === true) {
       editPanel.open(editor,parameters.content,settings,editPanelCallBack);
