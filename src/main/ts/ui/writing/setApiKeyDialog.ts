@@ -1,7 +1,7 @@
 import { Editor } from 'tinymce';
 
 
-const open = (editor: Editor,setApiKeyCallBack:(editor: Editor,api_key:string)=>void): void => {
+const open = (editor: Editor, setApiKeyCallBack: (editor: Editor, api_key: string) => void): void => {
   editor.windowManager.open({
     title: editor.translate('OpenAI Api Key 設定'),
     body: {
@@ -30,13 +30,13 @@ const open = (editor: Editor,setApiKeyCallBack:(editor: Editor,api_key:string)=>
       },
       {
         type: 'submit',
-        text: editor.translate('編輯'),
+        text: editor.translate('確定'),
         buttonType: 'primary'
       }
     ],
     onSubmit: (dialogApi) => {
       const data = dialogApi.getData();
-      setApiKeyCallBack(editor,data.apiKey.trim());
+      setApiKeyCallBack(editor, data.apiKey.trim());
       dialogApi.close();
     }
   });

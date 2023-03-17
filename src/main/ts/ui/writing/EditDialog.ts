@@ -1,7 +1,7 @@
 import { Editor } from 'tinymce';
 import { ISettings } from '../../interface/ISettings';
 
-const open = (editor: Editor, content: string[],settings:ISettings, editPanelCallBack: (content: string[], prompt: string,settings:ISettings) => void): void => {
+const open = (editor: Editor, content: string[],settings:ISettings, editPanelCallBack: (editor:Editor,content: string[], prompt: string,settings:ISettings) => void): void => {
   editor.windowManager.open({
     title: editor.translate('內容編輯'),
     size: 'large',
@@ -44,7 +44,7 @@ const open = (editor: Editor, content: string[],settings:ISettings, editPanelCal
     ],
     onSubmit: (dialogApi) => {
       const data = dialogApi.getData();
-      editPanelCallBack(content, data.editPrompt,settings);
+      editPanelCallBack(editor,content, data.editPrompt,settings);
       dialogApi.close();
     }
   });

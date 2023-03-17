@@ -90,5 +90,10 @@ tinymce.addI18n('zh-Hant', {
   "OpenAI Api Key 設定":"OpenAI Api Key 設定",
   "請填入OpenAI Api Key":"請填入OpenAI Api Key",
   "OpenAI API Key設定說明描述":"此處設定值因安全性考量，所填入API Key 並不會進行任何保存，所以當設定完成後，當瀏覽器重整或者重新開啟，皆須重新填入",
-  "尚未填入API Key":"尚未填入API Key"
+  "尚未填入API Key":"尚未填入API Key",
+  "確定":"確定",
+
+  "你正在試圖產生不符合OpenAI規範的內容":"你正在試圖產生不符合OpenAI規範的內容",
+  "解析審核API回傳結果失敗":"解析審核API回傳結果失敗",
+  "API請求失敗":"API請求失敗"
 });
