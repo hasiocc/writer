@@ -35,10 +35,17 @@ const startCallback = (editor: Editor): void => {
 
 const completeCallback = (editor: Editor): void => {
   editor.mode.set('design');
+  editor.insertContent("&#20;");
 }
 
-const progressCallback = (editor: Editor, mode: string): void => {
-  console.log(mode);
+const progressCallback = (editor: Editor, mode: string, rep:string): void => {
+
+  if (rep !== "" && Settings.get().globalSettings.allowHighlight === true) {
+    const backgroundColor = Settings.get().globalSettings.textBackgroundColor;
+    editor.insertContent('<font style="background-color:'+backgroundColor+';">' + rep + "</font>");
+  } else {
+    editor.insertContent(rep);
+  }
 }
 
 const requestErrorCallback = (editor: Editor, mode: string, error: OpenAI.IError): void => {
@@ -56,6 +63,11 @@ const requestErrorCallback = (editor: Editor, mode: string, error: OpenAI.IError
   } else if (error.errorType === "ajaxError") {
     editor.notificationManager.open({
       text: editor.translate(error.message) + "<br/>" + error.openAIError.message,
+      type: "error"
+    });
+  } else if (error.errorType === "SSEError") {
+    editor.notificationManager.open({
+      text: editor.translate(error.message) + "<br/>" + error.message2,
       type: "error"
     });
   }

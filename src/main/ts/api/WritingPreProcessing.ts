@@ -168,13 +168,16 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
 
   //暫存游標位置
   const bookmark = editor.selection.getBookmark(2, true);
-
   //這裡面的操作都不會記錄到bookmark內
   editor.undoManager.ignore(function () {
     //插入[insert]標記
     editor.insertContent("[insert]");
     //取得增加[insert]標記後的全文
     content = editor.getContent({ format: 'text' }).trim().replace(/^\s+|\s+$/g, '').trim().replace(/(^\s*)|(\s*$)/g, "");
+
+    //移除特殊空白
+    content = content.replace(new RegExp(String.fromCharCode(20),"g"),"");
+
     //將原本暫存的資料覆蓋回去
     editor.setContent(tempContent);
   });
@@ -191,7 +194,6 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
   } else {
     mode = "insert";
   }
-
   return formatContent(mode, content, settings);
 }
 

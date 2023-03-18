@@ -1,4 +1,5 @@
 import { ISettings } from '../interface/ISettings';
+import * as SSE from '../lib/sse/sse';
 import { Editor } from 'tinymce';
 
 //審核
@@ -6,7 +7,7 @@ const moderationUrl = "https://api.openai.com/v1/moderations";
 //編輯
 //const editUrl = "https://api.openai.com/v1/edits";
 //完成
-//const completionsUrl = "https://api.openai.com/v1/completions";
+const completionsUrl = "https://api.openai.com/v1/completions";
 //Chat
 //const chatUrl = "https://api.openai.com/v1/chat/completions";
 
@@ -18,7 +19,7 @@ interface IRequestOptions {
   editor: Editor,
   startCallback?: (editor: Editor, mode: string) => void
   completeCallback: (editor: Editor, mode: string) => void
-  progressCallback: (editor: Editor, mode: string) => void
+  progressCallback: (editor: Editor, mode: string, rep: string) => void
   requestErrorCallback: (editor: Editor, mode: string, error: IError) => void
 
 }
@@ -68,6 +69,37 @@ interface IOpenAIError {
   type: string
   param: string
   code: string
+}
+
+
+
+interface ISSERequest {
+  url: string
+  apiKey: string
+  mode: string
+  payload?: string
+}
+
+function createSSERequest(options: IRequestOptions): ISSERequest {
+
+  let url = "";
+  if (options.mode === 'append') {
+    url = completionsUrl;
+  }
+
+  const request: ISSERequest = {
+    url: url,
+    apiKey: options.apiKey,
+    mode: options.mode,
+    payload: JSON.stringify({
+      model: "text-davinci-003",
+      prompt: options.prompt.join(""),
+      stream: true,
+      max_tokens: 30
+    })
+  }
+
+  return request;
 }
 
 function formatModerationInfo(response: string): IModerationResponse {
@@ -156,18 +188,55 @@ function moderation(options: IRequestOptions) {
   )
 }
 
+function generate(options: IRequestOptions) {
+
+  const request = createSSERequest(options);
+
+  return new Promise(function (resolve, reject) {
+    try {
+      const source = SSE.SSE(request.url, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + request.apiKey,
+        },
+        method: "POST",
+        payload: request.payload
+      });
+      source.addEventListener("message", function (e: any) {
+        if (e.data !== "[DONE]") {
+          const payload = JSON.parse(e.data);
+          options.progressCallback(options.editor, options.mode, payload.choices[0].text);
+        } else {
+          options.completeCallback(options.editor, options.mode);
+        }
+      });
+      source.stream();
+    } catch (err) {
+      const error: IError = {
+        errorType: "SSEError",
+        message: "流式傳輸發生意外中斷",
+        message2: err
+      }
+      reject(error);
+    }
+  });
+}
+
 function request(options: IRequestOptions): void {
 
   options.startCallback(options.editor, options.mode);
   const Run = moderation(options);
 
+  Run.then(() => { return generate(options) });
+
   Run.catch((error) => {
     options.requestErrorCallback(options.editor, options.mode, error);
   });
 
+  /*
   Run.then(() => {
     options.completeCallback(options.editor, options.mode);
-  })
+  })*/
 }
 
 export {
