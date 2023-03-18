@@ -43,6 +43,8 @@ const progressCallback = (editor: Editor, mode: string, rep:string): void => {
   if (rep !== "" && Settings.get().globalSettings.allowHighlight === true) {
     const backgroundColor = Settings.get().globalSettings.textBackgroundColor;
     editor.insertContent('<font style="background-color:'+backgroundColor+';">' + rep + "</font>");
+    //https://stackoverflow.com/questions/32503291/tinymce-4-insertcontent-not-behaving-correctly
+    //editor.dom.add(editor.getBody(),'font', {class: 'row'},rep);
   } else {
     editor.insertContent(rep);
   }
@@ -67,7 +69,7 @@ const requestErrorCallback = (editor: Editor, mode: string, error: OpenAI.IError
     });
   } else if (error.errorType === "SSEError") {
     editor.notificationManager.open({
-      text: editor.translate(error.message) + "<br/>" + error.message2,
+      text: editor.translate(error.message) + "<br/>" + error.openAIError.message ,
       type: "error"
     });
   }
@@ -135,6 +137,7 @@ const writing = (editor: Editor): void => {
       timeout: 5000
     });
   }
+
 };
 
 export {

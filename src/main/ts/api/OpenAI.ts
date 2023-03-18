@@ -70,9 +70,6 @@ interface IOpenAIError {
   param: string
   code: string
 }
-
-
-
 interface ISSERequest {
   url: string
   apiKey: string
@@ -83,20 +80,34 @@ interface ISSERequest {
 function createSSERequest(options: IRequestOptions): ISSERequest {
 
   let url = "";
-  if (options.mode === 'append') {
+  let payload = "";
+  let stop: string[] = [];
+  if (options.settings.modelSettings.stopSequences.trim() === "") {
+    stop = [];
+  } else {
+    stop = options.settings.modelSettings.stopSequences.split(" ").slice(0, 4);
+  }
+
+  if (options.mode === 'append' && options.settings.globalSettings.defaultModel === 'text-davinci-003') {
     url = completionsUrl;
+    payload = JSON.stringify({
+      model: "text-davinci-003",
+      prompt: options.prompt.join(""),
+      stream: true,
+      max_tokens: Number(options.settings.modelSettings.maximumLength),
+      temperature: Number(options.settings.modelSettings.temperature),
+      top_p: Number(options.settings.modelSettings.Top_P),
+      stop: (stop.length > 0) ? stop : "",
+      presence_penalty: Number(options.settings.modelSettings.presencePenalty),
+      frequency_penalty: Number(options.settings.modelSettings.frequencyPenalty),
+    });
   }
 
   const request: ISSERequest = {
     url: url,
     apiKey: options.apiKey,
     mode: options.mode,
-    payload: JSON.stringify({
-      model: "text-davinci-003",
-      prompt: options.prompt.join(""),
-      stream: true,
-      max_tokens: 30
-    })
+    payload: payload
   }
 
   return request;
@@ -170,6 +181,7 @@ function moderation(options: IRequestOptions) {
               reject(error);
             } else {
               options.requestErrorCallback(options.editor, options.mode, error);
+              resolve(response);
             }
           } else {
             resolve(response);
@@ -193,32 +205,33 @@ function generate(options: IRequestOptions) {
   const request = createSSERequest(options);
 
   return new Promise(function (resolve, reject) {
-    try {
-      const source = SSE.SSE(request.url, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + request.apiKey,
-        },
-        method: "POST",
-        payload: request.payload
-      });
-      source.addEventListener("message", function (e: any) {
-        if (e.data !== "[DONE]") {
-          const payload = JSON.parse(e.data);
-          options.progressCallback(options.editor, options.mode, payload.choices[0].text);
-        } else {
-          options.completeCallback(options.editor, options.mode);
-        }
-      });
-      source.stream();
-    } catch (err) {
+    const source = SSE.SSE(request.url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + request.apiKey,
+      },
+      method: "POST",
+      payload: request.payload
+    });
+    source.addEventListener("message", function (e: any) {
+      if (e.data !== "[DONE]") {
+        const payload = JSON.parse(e.data);
+        options.progressCallback(options.editor, options.mode, payload.choices[0].text);
+      } else {
+        options.completeCallback(options.editor, options.mode);
+        resolve(request);
+      }
+    });
+    source.addEventListener('error', function (e: any) {
       const error: IError = {
         errorType: "SSEError",
         message: "流式傳輸發生意外中斷",
-        message2: err
+        openAIError: (JSON.parse(e.data).error as IOpenAIError)
       }
+      options.requestErrorCallback(options.editor, options.mode, error);
       reject(error);
-    }
+    });
+    source.stream();
   });
 }
 
@@ -229,14 +242,14 @@ function request(options: IRequestOptions): void {
 
   Run.then(() => { return generate(options) });
 
-  Run.catch((error) => {
-    options.requestErrorCallback(options.editor, options.mode, error);
-  });
-
   /*
   Run.then(() => {
     options.completeCallback(options.editor, options.mode);
   })*/
+
+  Run.catch((error) => {
+    options.requestErrorCallback(options.editor, options.mode, error);
+  });
 }
 
 export {

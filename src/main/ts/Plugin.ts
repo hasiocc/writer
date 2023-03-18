@@ -8,7 +8,6 @@ declare const tinymce: TinyMCE;
 export default (): void => {
 
   tinymce.PluginManager.add('writer', (editor) => {
-
     SettingsButtons.register(editor);
     Commands.register(editor);
 

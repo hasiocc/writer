@@ -8,13 +8,15 @@ Plugin();
 
 tinymce.init({
   selector: 'textarea.tinymce',
-  plugins: 'code writer writing fullscreen wordcount preview importcss searchreplace autolink directionality visualblocks visualchars image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons',
+  plugins: 'autosave code writer writing fullscreen wordcount preview importcss searchreplace autolink directionality visualblocks visualchars image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists help charmap emoticons',
   toolbar: 'writer| writing|print|save|undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons  | insertfile image media template link anchor codesample | ltr rtl',
   language: 'zh-Hant',
   branding: false,
   promotion: false,
   menubar: 'file edit insert format tools table help',
   elementpath: false,
+  autosave_ask_before_unload: false,
+  autosave_restore_when_empty:true,
   setup: function(editor) {
     editor.on('init', function() {
       editor.execCommand('mceFullScreen');

@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+//@ts-nocheck
 /**
+ *
  * Copyright (C) 2016 Maxime Petazzoni <maxime.petazzoni@bulix.org>.
  * All rights reserved.
  */
-
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const SSE = function (url, options) {
   if (!(this instanceof SSE)) {
     return new SSE(url, options);
@@ -186,7 +189,6 @@ export const SSE = function (url, options) {
 
   this.stream = function() {
     this._setReadyState(this.CONNECTING);
-
     this.xhr = new XMLHttpRequest();
     this.xhr.addEventListener('progress', this._onStreamProgress.bind(this));
     this.xhr.addEventListener('load', this._onStreamLoaded.bind(this));

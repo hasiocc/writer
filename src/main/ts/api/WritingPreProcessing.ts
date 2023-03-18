@@ -172,6 +172,7 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
   editor.undoManager.ignore(function () {
     //插入[insert]標記
     editor.insertContent("[insert]");
+
     //取得增加[insert]標記後的全文
     content = editor.getContent({ format: 'text' }).trim().replace(/^\s+|\s+$/g, '').trim().replace(/(^\s*)|(\s*$)/g, "");
 
@@ -194,6 +195,7 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
   } else {
     mode = "insert";
   }
+
   return formatContent(mode, content, settings);
 }
 
