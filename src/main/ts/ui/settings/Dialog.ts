@@ -87,7 +87,7 @@ const open = (editor: Editor): void => {
               type: 'input',
               name: 'connectTimeOut',
               inputMode: 'decimal',
-              label: editor.translate('等待API響應的最長時間'),
+              label: editor.translate('等待API響應的最長時間(單位:秒)'),
               placeholder: editor.translate('允許類型:數字'),
             },
             {

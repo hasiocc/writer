@@ -52,6 +52,12 @@ class SettingEntity {
       this.dialogSetting.EditModel.temperature = data.edit_mode_temperature.trim();
       this.dialogSetting.EditModel.Top_P = data.edit_mode_Top_P.trim();
 
+      //驗證欄位(一般設定)
+      if (!this.isNumber(data.connectTimeOut.trim())) {
+        throw new TypeError("模型設定-等待API響應的最長時間欄位必須為數值型態");
+      }
+
+
 
       //驗證欄位(模型設定)
       if (!this.isNumber(data.temperature.trim())) {
