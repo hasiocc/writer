@@ -93,10 +93,14 @@ function generate(options: IOpenAI.IRequestOptions) {
     source.addEventListener("message", function (e: any) {
       if (e.data !== "[DONE]") {
         const payload = JSON.parse(e.data);
-        if (options.settings.globalSettings.defaultModel === 'text-davinci-003') {
+        if (options.settings.globalSettings.defaultModel === 'text-davinci-003' || ["insert","edit"].indexOf(options.mode) !== -1) {
+
           options.progressCallback(options.editor, options.mode, payload.choices[0].text);
+
         } else if (options.settings.globalSettings.defaultModel === 'gpt-3.5-turbo' && typeof payload.choices[0].delta.content !== 'undefined') {
+
           options.progressCallback(options.editor, options.mode, payload.choices[0].delta.content);
+
         }
       } else {
         resolve(request);

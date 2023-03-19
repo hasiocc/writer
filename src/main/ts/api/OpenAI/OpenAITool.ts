@@ -34,7 +34,6 @@ function formatGPT3Prompt(prompt: string[],settings:ISettings):string {
   if(settings.globalSettings.defaultPrompt!== "") {
     prompt.unshift(settings.globalSettings.defaultPrompt+"##\n");
   }
-  console.log(prompt);
   return prompt.join("");
 }
 
@@ -78,6 +77,21 @@ function createSSERequest(options: IOpenAI.IRequestOptions): IOpenAI.ISSERequest
       presence_penalty: Number(options.settings.modelSettings.presencePenalty),
       frequency_penalty: Number(options.settings.modelSettings.frequencyPenalty),
     });
+  } else if (options.mode === 'insert') {
+    url = COMPLETIONS_URL;
+    const prompt = formatGPT3Prompt(options.prompt,options.settings).split("[insert]");
+    payload = JSON.stringify({
+      model: "text-davinci-003",
+      prompt: prompt[0],
+      suffix:prompt[1],
+      stream: true,
+      max_tokens: Number(options.settings.modelSettings.maximumLength),
+      temperature: Number(options.settings.modelSettings.temperature),
+      top_p: Number(options.settings.modelSettings.Top_P),
+      stop: (stop.length > 0) ? stop : "",
+      presence_penalty: Number(options.settings.modelSettings.presencePenalty),
+      frequency_penalty: Number(options.settings.modelSettings.frequencyPenalty),
+    });
   }
 
   const request: IOpenAI.ISSERequest = {
@@ -86,7 +100,6 @@ function createSSERequest(options: IOpenAI.IRequestOptions): IOpenAI.ISSERequest
     mode: options.mode,
     payload: payload
   }
-
   return request;
 }
 
