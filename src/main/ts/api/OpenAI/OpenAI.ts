@@ -82,6 +82,7 @@ function generate(options: IOpenAI.IRequestOptions) {
   const request = Tool.createSSERequest(options);
 
   return new Promise(function (resolve, reject) {
+
     const source = SSE.SSE(request.url, {
       headers: {
         "Content-Type": "application/json",
@@ -90,6 +91,7 @@ function generate(options: IOpenAI.IRequestOptions) {
       method: "POST",
       payload: request.payload
     });
+
     source.addEventListener("message", function (e: any) {
       if (e.data !== "[DONE]") {
         const payload = JSON.parse(e.data);
@@ -119,8 +121,18 @@ function generate(options: IOpenAI.IRequestOptions) {
       if (e.readyState === 2) {
         options.completeCallback(options.editor, options.mode, options.settings);
       }
-      console.log(e);
     });
+
+    window.setTimeout(function() {
+      if (source.readyState === 0) {
+        source.close();
+        const error: IOpenAI.IError = {
+          errorType: "StreamTimeOutError",
+          message: "API連線超時，強制中斷請求",
+        }
+        options.requestErrorCallback(options.editor, options.mode, error);
+      }
+    }, 5000);
 
     source.stream();
   });

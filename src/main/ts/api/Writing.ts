@@ -45,18 +45,20 @@ const completeCallback = (editor: Editor,mode: string,settings:ISettings): void 
 
 const progressCallback = (editor: Editor, mode: string, rep:string): void => {
 
+  rep = rep.trim();
+
   if (rep !== "" && Settings.get().globalSettings.allowHighlight === true) {
     const backgroundColor = Settings.get().globalSettings.textBackgroundColor;
     editor.insertContent('<font style="background-color:'+backgroundColor+';">' + rep + "</font>");
   } else {
-    if(rep === "\n") {
-      editor.insertContent("<p></p>");
-    }else if(rep === "。"){
-      editor.insertContent("。<p></p>");
+    editor.insertContent(rep);
+  }
 
-    }else {
-      editor.insertContent(rep);
-    }
+  //換行判斷
+  if(rep === "\n") {
+    editor.insertContent("<p></p>");
+  }else if(rep === "。"){
+    editor.insertContent("<p></p>");
   }
 }
 
@@ -82,6 +84,11 @@ const requestErrorCallback = (editor: Editor, mode: string, error: IOpenAI.IErro
   } else if (error.errorType === "SSEError") {
     editor.notificationManager.open({
       text: editor.translate(error.message) + "<br/>" + error.openAIError.message ,
+      type: "error"
+    });
+  } else if (error.errorType === "StreamTimeOutError") {
+    editor.notificationManager.open({
+      text: editor.translate(error.message),
       type: "error"
     });
   }
