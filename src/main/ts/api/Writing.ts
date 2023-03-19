@@ -4,7 +4,9 @@ import * as Settings from '../api/Setting';
 import { ISettings } from '../interface/ISettings';
 import * as editPanel from '../ui/writing/EditDialog';
 import * as setApiKeyPanel from '../ui/writing/setApiKeyDialog';
-import * as OpenAI from '../api/OpenAI';
+import * as OpenAI from './OpenAI/OpenAI';
+import * as IOpenAI from './OpenAI/IOpenAI';
+import * as OpenAITool from './OpenAI/OpenAITool';
 
 let apiKey = '';
 
@@ -33,9 +35,12 @@ const startCallback = (editor: Editor): void => {
   editor.mode.set("readonly");
 }
 
-const completeCallback = (editor: Editor): void => {
+const completeCallback = (editor: Editor,mode: string,settings:ISettings): void => {
   editor.mode.set('design');
-  editor.insertContent("&#20;");
+  if(settings.globalSettings.allowHighlight === true) {
+    editor.insertContent("&#20;");
+  }
+
 }
 
 const progressCallback = (editor: Editor, mode: string, rep:string): void => {
@@ -43,18 +48,25 @@ const progressCallback = (editor: Editor, mode: string, rep:string): void => {
   if (rep !== "" && Settings.get().globalSettings.allowHighlight === true) {
     const backgroundColor = Settings.get().globalSettings.textBackgroundColor;
     editor.insertContent('<font style="background-color:'+backgroundColor+';">' + rep + "</font>");
-    //https://stackoverflow.com/questions/32503291/tinymce-4-insertcontent-not-behaving-correctly
-    //editor.dom.add(editor.getBody(),'font', {class: 'row'},rep);
   } else {
-    editor.insertContent(rep);
+    if(rep === "\n") {
+      editor.insertContent("<p></p>");
+    }else if(rep === "。"){
+      editor.insertContent("。<p></p>");
+
+    }else {
+      editor.insertContent(rep);
+    }
   }
 }
 
-const requestErrorCallback = (editor: Editor, mode: string, error: OpenAI.IError): void => {
+const requestErrorCallback = (editor: Editor, mode: string, error: IOpenAI.IError): void => {
 
   if (error.errorType === "moderationError") {
+
+    const category = OpenAITool.getModerationErrorTagsDescription(error.moderationResponse,editor);
     editor.notificationManager.open({
-      text: editor.translate(error.message),
+      text: editor.translate(error.message) + "<br/>" + editor.translate("OpenAI的審核端點判斷內容為")+":"+category.join(","),
       type: "error"
     });
   } else if (error.errorType === "moderationRequestError") {
@@ -80,7 +92,7 @@ const requestErrorCallback = (editor: Editor, mode: string, error: OpenAI.IError
 
 const request = (editor: Editor, mode: string, settings: ISettings, prompt: string[]): void => {
 
-  const requestOptions: OpenAI.IRequestOptions = {
+  const requestOptions: IOpenAI.IRequestOptions = {
     mode: mode,
     settings: settings,
     apiKey: apiKey,
