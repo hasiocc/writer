@@ -17,7 +17,6 @@ class SettingEntity {
 
   private convertSettings(data): void {
     try {
-      console.log(data);
       this.dialogSetting.globalSettings.allowCloseAuditTips = data.allowCloseAuditTips;
       this.dialogSetting.globalSettings.allowHighlight = data.allowHighlight;
       this.dialogSetting.globalSettings.textBackgroundColor = data.textBackgroundColor.trim();

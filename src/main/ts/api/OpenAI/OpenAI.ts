@@ -49,7 +49,6 @@ function moderation(options: IOpenAI.IRequestOptions) {
         try {
           const rep = (response as IOpenAI.IRequestAjaxResponse);
           const moderationInfo = Tool.formatModerationInfo(rep.requestAjaxResponseText);
-          console.log(moderationInfo);
           if (moderationInfo.flagged === true) {
             const error: IOpenAI.IError = {
               errorType: "moderationError",
@@ -118,9 +117,7 @@ function generate(options: IOpenAI.IRequestOptions) {
       }
       console.log(e);
     });
-    source.addEventListener("load", function (e: any) {
-      console.log(e);
-    });
+
     source.stream();
   });
 }
@@ -131,11 +128,6 @@ function request(options: IOpenAI.IRequestOptions): void {
   const Run = moderation(options);
 
   Run.then(() => { return generate(options) });
-
-  /*
-  Run.then(() => {
-    options.completeCallback(options.editor, options.mode);
-  })*/
 
   Run.catch((error) => {
     options.requestErrorCallback(options.editor, options.mode, error);

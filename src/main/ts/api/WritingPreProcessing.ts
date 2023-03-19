@@ -4,17 +4,24 @@ import { ISettings } from '../interface/ISettings';
 import { IPreProcessing } from '../interface/IPreProcessing';
 import { encode } from '../lib/counter/Encoder';
 
+const getDefaultPromptMaxToken = (settings:ISettings):number => {
+  const defaultPrompt = settings.globalSettings.defaultPrompt;
+  const defaultModel = settings.globalSettings.defaultModel;
+  let promptMaxToken = 0;
+  if(defaultPrompt.trim() !== "") {
+    if (defaultModel === 'text-davinci-003') {
+      promptMaxToken = encode(defaultPrompt+"##\n").length;
+    } else if(defaultModel === 'gpt-3.5-turbo') {
+      promptMaxToken = encode(defaultPrompt+"\n").length;
+    }
+  }
+  return promptMaxToken;
+}
 
-/**
- * 新增模式的提示文處理
- * @param content
- * @param settings
- * @returns
- */
 const formatContentByAppendMode = (content: string[], settings: ISettings): string[] => {
   const lastPrompt = [];
   content.every(function (value) {
-    if (encode(lastPrompt.join("") + value).length <= Number(settings.modelSettings.maxPromptLength)) {
+    if (encode(lastPrompt.join("") + value).length + getDefaultPromptMaxToken(settings) <= Number(settings.modelSettings.maxPromptLength)) {
       lastPrompt.unshift(value);
       return true;
     } else {
@@ -24,13 +31,6 @@ const formatContentByAppendMode = (content: string[], settings: ISettings): stri
   return lastPrompt;
 }
 
-/**
- * Insert或Edit模式的提示文處理
- * @param mode
- * @param content
- * @param settings
- * @returns
- */
 const formatContentByInsertOrEditMode = (mode: string, content: string[], settings: ISettings): string[] => {
 
   //段落總長度
@@ -53,7 +53,7 @@ const formatContentByInsertOrEditMode = (mode: string, content: string[], settin
   }
 
   const status = true;
-  let InsertAreaTokensTotal = encode(content[indexPosition]).length;
+  let InsertAreaTokensTotal = encode(content[indexPosition]).length + getDefaultPromptMaxToken(settings);
   let lastIndex = 0;
   let firstIndex = 0;
   let step = 1;
@@ -195,7 +195,7 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
   } else {
     mode = "insert";
   }
-
+  console.log(formatContent(mode, content, settings));
   return formatContent(mode, content, settings);
 }
 

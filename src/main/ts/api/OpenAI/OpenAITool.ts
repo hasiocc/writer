@@ -1,3 +1,4 @@
+import { ISettings } from '../../interface/ISettings';
 import * as IOpenAI from './IOpenAI';
 import { Editor } from 'tinymce';
 
@@ -10,9 +11,14 @@ const COMPLETIONS_URL = "https://api.openai.com/v1/completions";
 //Chat
 const CHAT_URL = "https://api.openai.com/v1/chat/completions";
 
-function formatGPT35Prompt(prompt: string[]) {
+function formatGPT35Prompt(prompt: string[],settings:ISettings) {
   const list = [];
   const role = ["user", "assistant"];
+
+  if(settings.globalSettings.defaultPrompt!== "") {
+    list.push({"role":"system","content":settings.globalSettings.defaultPrompt+"\n"});
+  }
+
   Object.entries(prompt).forEach(entry => {
     const [index, value] = entry;
     if ((Number(index) + 1) % 2 !== 0) {
@@ -24,11 +30,21 @@ function formatGPT35Prompt(prompt: string[]) {
   return list;
 }
 
+function formatGPT3Prompt(prompt: string[],settings:ISettings):string {
+  if(settings.globalSettings.defaultPrompt!== "") {
+    prompt.unshift(settings.globalSettings.defaultPrompt+"##\n");
+  }
+  console.log(prompt);
+  return prompt.join("");
+}
+
 function createSSERequest(options: IOpenAI.IRequestOptions): IOpenAI.ISSERequest {
 
   let url = "";
   let payload = "";
   let stop: string[] = [];
+
+  //處理中斷詞問題
   if (options.settings.modelSettings.stopSequences.trim() === "") {
     stop = [];
   } else {
@@ -36,10 +52,11 @@ function createSSERequest(options: IOpenAI.IRequestOptions): IOpenAI.ISSERequest
   }
 
   if (options.mode === 'append' && options.settings.globalSettings.defaultModel === 'text-davinci-003') {
+
     url = COMPLETIONS_URL;
     payload = JSON.stringify({
       model: "text-davinci-003",
-      prompt: options.prompt.join(""),
+      prompt: formatGPT3Prompt(options.prompt,options.settings),
       stream: true,
       max_tokens: Number(options.settings.modelSettings.maximumLength),
       temperature: Number(options.settings.modelSettings.temperature),
@@ -52,7 +69,7 @@ function createSSERequest(options: IOpenAI.IRequestOptions): IOpenAI.ISSERequest
     url = CHAT_URL;
     payload = JSON.stringify({
       model: "gpt-3.5-turbo",
-      messages: formatGPT35Prompt(options.prompt),
+      messages: formatGPT35Prompt(options.prompt,options.settings),
       stream: true,
       max_tokens: Number(options.settings.modelSettings.maximumLength),
       temperature: Number(options.settings.modelSettings.temperature),
