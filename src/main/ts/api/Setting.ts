@@ -10,6 +10,7 @@ const defaultSettings = {
     defaultPrompt: "",
     selectSaveMode: "localStorage",
     defaultModel: "gpt-3.5-turbo",
+    connectTimeOut: "5"
   },
   modelSettings: {
     temperature: "0.7",

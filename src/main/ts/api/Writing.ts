@@ -76,23 +76,19 @@ const requestErrorCallback = (editor: Editor, mode: string, error: IOpenAI.IErro
       text: editor.translate(error.message) + "<br/>" + error.message2,
       type: "error"
     });
-  } else if (error.errorType === "ajaxError") {
+  } else if (["ajaxError","SSEError"].indexOf(error.errorType) !== -1) {
     editor.notificationManager.open({
       text: editor.translate(error.message) + "<br/>" + error.openAIError.message,
       type: "error"
     });
-  } else if (error.errorType === "SSEError") {
-    editor.notificationManager.open({
-      text: editor.translate(error.message) + "<br/>" + error.openAIError.message ,
-      type: "error"
-    });
-  } else if (error.errorType === "StreamTimeOutError") {
+  } else if (["StreamTimeOutError","ajaxTimeOutError"].indexOf(error.errorType) !== -1) {
     editor.notificationManager.open({
       text: editor.translate(error.message),
-      type: "error"
+      type: "error",
+      timeout: 5000
     });
   }
-
+  //ajaxTimeOutError
   editor.mode.set('design');
 }
 

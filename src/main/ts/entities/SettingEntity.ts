@@ -24,6 +24,7 @@ class SettingEntity {
       this.dialogSetting.globalSettings.defaultPrompt = data.defaultPrompt.trim();
       this.dialogSetting.globalSettings.selectSaveMode = data.selectSaveMode;
       this.dialogSetting.globalSettings.defaultModel = data.defaultModel;
+      this.dialogSetting.globalSettings.connectTimeOut = data.connectTimeOut.trim();
 
       this.dialogSetting.modelSettings.temperature = data.temperature.trim();
       this.dialogSetting.modelSettings.maximumLength = data.maximumLength.trim();

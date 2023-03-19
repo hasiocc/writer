@@ -45,6 +45,7 @@ interface ISettings {
     defaultPrompt: string,
     selectSaveMode: string,
     defaultModel: string,
+    connectTimeOut:string
   },
   modelSettings: IModelSettings
   InsertModel: IInsertModel,

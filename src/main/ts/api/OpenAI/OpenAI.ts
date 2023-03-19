@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ISettings } from '../../interface/ISettings';
 import * as SSE from '../../lib/sse/sse';
 import * as IOpenAI from './IOpenAI';
 import * as Tool from './OpenAITool';
 
-function ajax(config: IOpenAI.IAjaxOptions) {
+function ajax(config: IOpenAI.IAjaxOptions,settings:ISettings) {
   const requestAjaxResponse: IOpenAI.IRequestAjaxResponse = {
     requestAjaxConfig: config,
     requestAjaxResponseText: "",
@@ -15,6 +16,7 @@ function ajax(config: IOpenAI.IAjaxOptions) {
     xhr.open("POST", config.url, config.sync);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.setRequestHeader('Authorization', 'Bearer ' + config.apiKey);
+    xhr.timeout = Number(settings.globalSettings.connectTimeOut) * 1000;
     xhr.send(config.data);
     xhr.onload = function () {
       requestAjaxResponse.requestAjaxResponseStatus = xhr.status;
@@ -32,6 +34,13 @@ function ajax(config: IOpenAI.IAjaxOptions) {
         reject(error);
       }
     }
+    xhr.ontimeout = function () {
+      const error: IOpenAI.IError = {
+        errorType: "ajaxTimeOutError",
+        message: "API連線超時，強制中斷請求",
+      }
+      reject(error);
+    }
   });
 }
 
@@ -43,7 +52,7 @@ function moderation(options: IOpenAI.IRequestOptions) {
     apiKey: options.apiKey,
     sync: true,
   }
-  return ajax(config).then(
+  return ajax(config,options.settings).then(
     function (response) {
       return new Promise(function (resolve, reject) {
         try {
@@ -132,7 +141,7 @@ function generate(options: IOpenAI.IRequestOptions) {
         }
         options.requestErrorCallback(options.editor, options.mode, error);
       }
-    }, 5000);
+    }, Number(options.settings.globalSettings.connectTimeOut) * 1000);
 
     source.stream();
   });

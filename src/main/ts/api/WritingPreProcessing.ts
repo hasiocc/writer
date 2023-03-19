@@ -170,6 +170,9 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
   const bookmark = editor.selection.getBookmark(2, true);
   //這裡面的操作都不會記錄到bookmark內
   editor.undoManager.ignore(function () {
+
+    const regExp = new RegExp(String.fromCharCode(20),"g");
+
     //插入[insert]標記
     editor.insertContent("[insert]");
 
@@ -177,7 +180,7 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
     content = editor.getContent({ format: 'text' }).trim().replace(/^\s+|\s+$/g, '').trim().replace(/(^\s*)|(\s*$)/g, "");
 
     //移除特殊空白
-    content = content.replace(new RegExp(String.fromCharCode(20),"g"),"");
+    content = content.replace(regExp,"");
 
     //將原本暫存的資料覆蓋回去
     editor.setContent(tempContent);
@@ -190,8 +193,8 @@ const preProcessing = (editor: Editor, settings: ISettings): IPreProcessing => {
   let mode = "append";
   if (selectedContent.trim().length > 0) {
     mode = "edit";
-  } else if (content.endsWith("[insert]")) {
-    content = content.slice(0, content.length - "[insert]".length);
+  } else if (content.trim().endsWith("[insert]")) {
+    content = content.slice(0, content.trim().length - "[insert]".length);
   } else {
     mode = "insert";
   }

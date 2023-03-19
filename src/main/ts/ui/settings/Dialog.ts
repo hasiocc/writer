@@ -21,6 +21,7 @@ function setSettings(isDefault = false) {
     defaultPrompt: settings.globalSettings.defaultPrompt,
     selectSaveMode: settings.globalSettings.selectSaveMode,
     defaultModel: settings.globalSettings.defaultModel,
+    connectTimeOut: settings.globalSettings.connectTimeOut,
 
 
     //模型設定
@@ -81,6 +82,17 @@ const open = (editor: Editor): void => {
             {
               type: 'htmlpanel',
               html: '<div style="color:blue;font-size: 12px">' + editor.translate("內容產生時預設使用模型說明描述") + '</div>'
+            },
+            {
+              type: 'input',
+              name: 'connectTimeOut',
+              inputMode: 'decimal',
+              label: editor.translate('等待API響應的最長時間'),
+              placeholder: editor.translate('允許類型:數字'),
+            },
+            {
+              type: 'htmlpanel',
+              html: '<div style="color:blue;font-size: 12px">' + editor.translate("等待API響應的最長時間說明描述") + '</div>'
             },
             {
               type: 'checkbox',
