@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as SSE from '../../lib/sse/sse';
 import * as IOpenAI from './IOpenAI';
 import * as Tool from './OpenAITool';
