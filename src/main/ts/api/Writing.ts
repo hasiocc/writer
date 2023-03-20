@@ -7,6 +7,7 @@ import * as setApiKeyPanel from '../ui/writing/setApiKeyDialog';
 import * as OpenAI from './OpenAI/OpenAI';
 import * as IOpenAI from './OpenAI/IOpenAI';
 import * as OpenAITool from './OpenAI/OpenAITool';
+import * as HtmlChecker from '../api/HtmlChecker';
 
 let apiKey = '';
 
@@ -110,6 +111,27 @@ const request = (editor: Editor, mode: string, settings: ISettings, prompt: stri
 }
 
 const writing = (editor: Editor): void => {
+
+  /*
+  const html = new HtmlChecker.HtmlChecker();
+  html.append("<h1>TEST<p>今天我過得不錯但是事情沒有那麼簡單</p></h1>");
+  console.log(html.getContent());
+  console.log(html.getContent());
+  html.append("<strong>錯但是事情</strong>");
+  console.log(html.getContent());
+  console.log(html.getContent());
+  */
+  /*
+  console.log(HtmlChecker.checkTags("<h1>TEST<p>今天我過得不錯但是事情沒有那麼簡單</p></h1>"));
+  console.log(HtmlChecker.checkTags("<strong>錯但是事情</strong>"))
+  console.log(HtmlChecker.checkTags("<h1>TEST</h1><p>今天我過得不<strong>錯但是事情</strong>沒有那麼簡單</p>"));
+  console.log(HtmlChecker.checkTags('<p>AA<span style="font-family: \'comic sans ms\', sans-serif;">AEEV</span></p>'));
+  console.log(HtmlChecker.checkTags('<p>AA<span style="font-family: \'comic sans ms\', sans-serif;">AEEV</span></p>'));
+  */
+  /*
+
+  */
+  //console.log(HtmlChecker.checkTags("<h1>TEST<h1>"));
 
   const settings: ISettings = Settings.get();
   const parameters = PreProcessing.preProcessing(editor, settings);
